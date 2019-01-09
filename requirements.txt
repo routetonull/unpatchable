@@ -1,0 +1,2 @@
+easysnmp==0.2.5
+prettytable==0.7.2
