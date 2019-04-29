@@ -26,10 +26,11 @@ x.clear_rows()
 x.field_names = ["INTERFACE","STATUS","LAST CHANGE DAYS"]
 
 def lastchange2date(uptime,lastchange):
-    if uptime >= lastchange:
+    
+    if int(uptime) > int(lastchange):
         diff = int(uptime)-int(lastchange)
     else:
-        diff = int(uptime)
+        diff = int(uptime)  
 
     d0 = datetime.fromtimestamp(time.time()-diff/100)
     d1 = datetime.now()
