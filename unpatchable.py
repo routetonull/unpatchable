@@ -45,7 +45,7 @@ def main():
 
     # port names to include or ignore to filter useless values
     include= ('ethernet')
-    ignore = ('StackSub-St-','StackPort','Vl','vlan','VLAN','VLAN-','Trk','lo','oobm','Po','Nu','Gi/--Uncontrolled','Gi/--Controlled','Te/--Uncontrolled','Te/--Controlled')
+    ignore = ('StackSub-St-','StackPort','Vl','vlan','Vlan','VLAN','VLAN-','Trk','lo','oobm','Po','port-channel','Nu','Gi/--Uncontrolled','Gi/--Controlled','Te/--Uncontrolled','Te/--Controlled')
 
     args = parser.parse_args()
     hostname = args.hostname
