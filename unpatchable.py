@@ -26,12 +26,10 @@ x.clear_rows()
 x.field_names = ["INTERFACE","STATUS","LAST CHANGE DAYS"]
 
 def lastchange2date(uptime,lastchange):
-    
     if int(uptime) > int(lastchange):
         diff = int(uptime)-int(lastchange)
     else:
         diff = int(uptime)  
-
     d0 = datetime.fromtimestamp(time.time()-diff/100)
     d1 = datetime.now()
     delta = d1 - d0
@@ -43,6 +41,7 @@ def main():
     parser.add_argument("-H", "--hostname", help="IP Address / Hostname to check [REQUIRED]",type=str, required=True)
     parser.add_argument("-c", "--community",help="SNMP Community (default 'public')",type=str,default='public')
     parser.add_argument("-d", "--down",help="Show only down interfaces (default n)",type=str,choices=['y', 'n'],default='n')
+    parser.add_argument("-D", "--days",help="Show only interfaces down for more than days (default 0)",type=int,default=0)
 
     # port names to include or ignore to filter useless values
     include= ('ethernet')
@@ -55,12 +54,11 @@ def main():
     try:
         item = session.walk(ifName)
     except:
-        sys.exit('\nSNMP CONNECTION PROBLEM host '+hostname+" check IP and COMMUNITY\n")
+        sys.exit(f'\nSNMP CONNECTION PROBLEM host {hostname} check IP and COMMUNITY\n')
     # get uptime to calculate last change
     uptime = session.get(sysUpTime).value
     print('\nHOST\t {}'.format(hostname))
-    print("\nDEVICE UPTIME\t {}\n".format(str(timedelta(seconds=(int(uptime)/100)))))
-    
+    print(f"\nDEVICE UPTIME\t {str(timedelta(seconds=(int(uptime)/100)))}\n")
     for value in item:
         # remove all digits from port names before filtering
         result = ''.join(i for i in value.value if not i.isdigit())
@@ -75,9 +73,7 @@ def main():
             if args.down == 'n':
                 x.add_row([ifname,opstatus,lastchangedate])
             else:
-                if opstatus == 'down':
+                if opstatus == 'down' and int(lastchangedate) >= args.days:          
                     x.add_row([ifname,opstatus,lastchangedate])
-                    
     print(x.get_string())
-
 main()
